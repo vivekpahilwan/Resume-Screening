@@ -10,27 +10,16 @@ nltk.download('stopwords')
 clf = pickle.load(open('clf.pkl','rb'))
 tfidfd = pickle.load(open('tfidf.pkl','rb'))
 
-
-
-
-
 # Cleaning
-
 def clean_resume(resume_text):
-    clean_text = re.sub('http\S+\s*', ' ', resume_text)
+    clean_text = re.sub(r'http\S+\s*', ' ', resume_text)
     clean_text = re.sub('RT|cc', ' ', clean_text)
-    clean_text = re.sub('#\S+', '', clean_text)
-    clean_text = re.sub('@\S+', '  ', clean_text)
+    clean_text = re.sub(r'#\S+', '', clean_text)
+    clean_text = re.sub(r'@\S+', '  ', clean_text)
     clean_text = re.sub('[%s]' % re.escape("""!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~"""), ' ', clean_text)
     clean_text = re.sub(r'[^\x00-\x7f]', r' ', clean_text)
-    clean_text = re.sub('\s+', ' ', clean_text)
+    clean_text = re.sub(r'\s+', ' ', clean_text)
     return clean_text
-
-
-
-
-
-
 
 # web app
 def main():
@@ -49,10 +38,6 @@ def main():
         input_features = tfidfd.transform([cleaned_resume])
         prediction_id = clf.predict(input_features)[0]
         st.write(prediction_id)
-
-
-
-
 
         # Map category ID to category name
         category_mapping = {
@@ -86,8 +71,6 @@ def main():
         category_name = category_mapping.get(prediction_id, "Unknown")
 
         st.write("Predicted Category:", category_name)
-
-
 
 # python main
 if __name__ == "__main__":
